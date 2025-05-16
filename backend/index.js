@@ -4,6 +4,11 @@ import { dbConnect } from './config/db.js';
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import subCategoryRoutes from './routes/subCategoryRoutes.js';
+// import productRoutes from './routes/productRoutes.js';
+
+
 
 dotenv.config()
 
@@ -22,6 +27,9 @@ app.use(cors({
 
 
 app.use('/auth', authRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/subcategories', subCategoryRoutes);
+// app.use('/products', productRoutes);
 
 
 app.listen(PORT,()=>{
