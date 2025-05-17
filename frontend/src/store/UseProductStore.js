@@ -13,6 +13,15 @@ const useProductStore = create((set, get) => ({
   //For Search and Filter
   searchQuery: "",
   markedSubCategories: [],
+  
+  // Pagination state
+  currentPage: 1,
+  itemsPerPage: 3,
+  totalItems: 0,
+
+  setCurrentPage: (page) => set({ currentPage: page }),
+  setItemsPerPage: (items) => set({ itemsPerPage: items }),
+  setTotalItems: (total) => set({ totalItems: total }),
 
   setSearchQuery: (searchQuery) => set({ searchQuery }),
   // mimics React's useState, which  accepts either a direct value or a function.
