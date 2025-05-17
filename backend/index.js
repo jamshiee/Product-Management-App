@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import subCategoryRoutes from './routes/subCategoryRoutes.js';
-// import productRoutes from './routes/productRoutes.js';
+import productRoutes from './routes/productRoutes.js';
 
 
 
@@ -29,7 +29,7 @@ app.use(cors({
 app.use('/auth', authRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/subcategories', subCategoryRoutes);
-// app.use('/products', productRoutes);
+app.use('/products', productRoutes);
 
 
 app.listen(PORT,()=>{

@@ -3,14 +3,15 @@ import Header from "../components/dashboard/Header";
 import SideBar from "../components/dashboard/SideBar";
 import ProductGrid from "../components/dashboard/ProductGrid";
 import Pagination from "../components/dashboard/Pagination";
-import AddProductModal from "../components/AddProductModal";
 import AddSubCategoryModal from "../components/AddSubCategoryModal";
 import AddCategoryModal from "../components/AddCategoryModal";
+import AddProductModal from "../components/AddProductModal";
 
 const Dashboard = () => {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isSubcategoryModalOpen, setIsSubcategoryModalOpen] = useState(false);
+
 
   return (
     <div className="min-h-screen">

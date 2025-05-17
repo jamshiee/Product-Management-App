@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import WishlistDrawer from "../WishlistDrawer";
 
 const Header = () => {
+
+  const [openWishlist, setOpenWishlist] = useState(false);
+
   return (
     <div>
       <header className="bg-[#003f62] text-white p-4  flex   items-center px-10 mb-4">
@@ -15,7 +19,7 @@ const Header = () => {
           </button>
         </div>
         <div className="flex items-center justify-end w-[35%] space-x-4">
-          <button className="flex items-center space-x-1">
+          <button className="flex items-center space-x-1 cursor-pointer" onClick={() => setOpenWishlist(true)}>
             <svg
               className="w-6 h-6"
               fill="white"
@@ -32,7 +36,7 @@ const Header = () => {
             <span className="text-xs bg-[#1a5e83]  rounded-full px-1"> 0 </span>
           </button>
          
-          <button className="flex items-center space-x-1">
+          <button className="flex items-center space-x-1 cursor-pointer">
             <svg
               className="w-5 h-5"
               fill="white"
@@ -54,6 +58,7 @@ const Header = () => {
           </button>
         </div>
       </header>
+      <WishlistDrawer isOpen={openWishlist} onClose={() => setOpenWishlist(false)} />
     </div>
   );
 };

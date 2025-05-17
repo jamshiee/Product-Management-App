@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const variantSchema = new mongoose.Schema({
   ram: { type: String, required: true },
@@ -11,16 +11,15 @@ const productSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: String,
     images: {
-      type: [String], // array of image URLs or paths
-      validate: [arrayLimit, "{PATH} exceeds the limit of 3"],
+      type: [String]
     },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-    subCategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory" },
+    subcategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory", required: true },
     variants: {
       type: [variantSchema],
       required: true,
       validate: [(v) => v.length > 0, "Product must have at least one variant"],
     },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
