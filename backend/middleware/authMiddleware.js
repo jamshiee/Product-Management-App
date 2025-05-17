@@ -16,7 +16,6 @@ dotenv.config();
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decodedToken.userId);
-    console.log("Token verified");
     next();
   } catch (err) {
     res.status(401).json({ message: "Invalid token" });

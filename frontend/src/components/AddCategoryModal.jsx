@@ -1,21 +1,20 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Modal from "./Modal";
-import api from "../lib/axios";
+import useProductStore from "../store/useProductStore";
 
 const AddCategoryModal = ({ isOpen, onClose }) => {
   const [category, setCategory] = useState("");
+  const { createCategory } = useProductStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/categories/create", { name: category });
-      toast.success("Category created successfully");
+      await createCategory(category);
+      setCategory("");
       onClose();
-      console.log(res);
     } catch (error) {
-        toast.error("Error creating category: " + error.response?.data?.message || "Unknown error");
-        console.log(error);
+      console.log(error);
     }
   };
 
@@ -34,6 +33,7 @@ const AddCategoryModal = ({ isOpen, onClose }) => {
                     type="text"
                     className="mt-1 block w-full p-2 border rounded-md"
                     placeholder="Enter category name"
+                    value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     required
                   />

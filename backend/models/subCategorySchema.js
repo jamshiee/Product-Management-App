@@ -9,7 +9,8 @@ const subCategorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
     required: true
-  }
+  },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 }, { timestamps: true });
 
 export default mongoose.model("SubCategory", subCategorySchema);

@@ -4,6 +4,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import api from "../../lib/axios";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 
   const signUpSchema = z.object({
@@ -14,7 +16,10 @@ import api from "../../lib/axios";
       .min(6, { message: "Password must be at least 6 characters long" }),
   });
 
+
   const Signup = () => {
+    const navigate = useNavigate();
+
     const {
       register,
       handleSubmit,
@@ -26,9 +31,11 @@ import api from "../../lib/axios";
     const onSubmit = async (data) => {
       try {
         const res = await api.post("/auth/signup", data);
-
         console.log("Sign-up successful:", res.data);
+        toast.success("Sign-up successful");
+        navigate("/signin");
       } catch (error) {
+        toast.error("Sign-up failed: " + error.response.data.message);
         console.error("Sign-up error:", error);
       }
     };
@@ -48,7 +55,7 @@ import api from "../../lib/axios";
               <p className="text-lg mb-6">
                 To keep connected with us please login with your personal info
               </p>
-              <button className="border-2 border-white text-white px-6 py-2 rounded-full hover:bg-white hover:text-blue-900 transition">
+              <button onClick={() => navigate("/signin")} className="border-2 border-white text-white cursor-pointer px-6 py-2 rounded-full hover:bg-white hover:text-blue-900 transition">
                 SIGN IN
               </button>
             </div>
@@ -141,14 +148,20 @@ import api from "../../lib/axios";
                     )}
                   </div>
                 </div>
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting} 
+                  className="w-full bg-yellow-400 text-white py-3 rounded-full mt-6 hover:bg-yellow-300"
+                >
+                  {isSubmitting ? "Signing Up..." : "SIGN UP"}
+                </button>
               </form>
-              <button disabled={isSubmitting} className="w-full bg-yellow-400 text-white py-3 rounded-full mt-6 hover:bg-yellow-300 ">
-                {isSubmitting ? "Signing Up..." : "SIGN UP"}
-              </button>
             </div>
           </div>
         </div>
+        <ToastContainer />
       </div>
+      
     );
   };
 

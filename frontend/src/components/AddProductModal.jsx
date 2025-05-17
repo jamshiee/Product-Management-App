@@ -3,12 +3,12 @@ import Modal from "./Modal.jsx";
 import api from "../lib/axios.js"; 
 import { toast } from "react-toastify";
 import { uploadToCloudinary } from "../lib/cloudinary.js";
+import useProductStore from "../store/useProductStore";
 
 const AddProductModal = ({ isOpen, onClose}) => {
   const [title, setTitle] = useState("");
   const [subcategory, setSubcategory] = useState("");
   const [description, setDescription] = useState("");
-  const [listSubcategories, setListSubcategories] = useState([]);
   const [variants, setVariants] = useState([
     { ram: "4GB", price: "", quantity: 1 },
   ]);
@@ -16,19 +16,12 @@ const AddProductModal = ({ isOpen, onClose}) => {
   const [previewImages, setPreviewImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  console.log("subcategory: ",subcategory);
+  const { subCategories, getAllSubCategories, newProductCreated, setNewProductCreated } = useProductStore();
 
   useEffect(() => {
-    const fetchSubcategories = async () => {
-      try {
-        const res = await api.get("/subcategories/getall");
-        setListSubcategories(res.data);
-      } catch (error) {
-        console.error("Error fetching subcategories:", error);
-      }
-    };
-    fetchSubcategories();
-  }, []);
+    getAllSubCategories();
+  }, [getAllSubCategories]);
+
 
   const addVariant = () => {
     setVariants((prev) => [...prev, { ram: "4GB", price: "", quantity: 1 }]);
@@ -99,6 +92,7 @@ const AddProductModal = ({ isOpen, onClose}) => {
       setDescription("");
       setVariants([{ ram: "4GB", price: "", quantity: 1 }]);
       setImages([]);
+    setNewProductCreated((val)=>!val);
     } catch (error) {
       toast.error("Error: " + error.response?.data?.message || "Unknown error");
       console.error(error);
@@ -200,7 +194,7 @@ const AddProductModal = ({ isOpen, onClose}) => {
         {/* Subcategory */}
         <div className="flex gap-7 items-center">
           <label className="block text-md text-gray-800 font-semibold">Subcategory: </label>
-          {listSubcategories.length > 0 ? (
+          {subCategories.length > 0 ? (
             <select
               className="mt-1 w-full p-2 border border-gray-600 rounded-xl"
               value={subcategory}
@@ -210,7 +204,7 @@ const AddProductModal = ({ isOpen, onClose}) => {
               <option disabled selected hidden value="">
                 Select subcategory
               </option>
-              {listSubcategories.map((s) => (
+              {subCategories.map((s) => (
                 <option key={s._id} value={s._id}>
                   {s.name}
                 </option>

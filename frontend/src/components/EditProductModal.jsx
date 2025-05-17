@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import useProductStore from "../store/useProductStore.js";
 
 const EditProductModal = ({ isOpen, onClose }) => {
-  const { productDetails, setProductDetails } = useProductStore();
+  const { productDetails, setProductDetails, subCategories, getAllSubCategories } = useProductStore();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -13,7 +13,6 @@ const EditProductModal = ({ isOpen, onClose }) => {
     description: '',
     variants: []
   });
-  const [listSubcategories, setListSubcategories] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
@@ -28,16 +27,8 @@ const EditProductModal = ({ isOpen, onClose }) => {
   }, [productDetails]);
 
   useEffect(() => {
-    const fetchSubcategories = async () => {
-      try {
-        const res = await api.get("/subcategories/getall");
-        setListSubcategories(res.data);
-      } catch (error) {
-        console.error("Error fetching subcategories:", error);
-      }
-    };
-    fetchSubcategories();
-  }, []);
+    getAllSubCategories();
+  }, [getAllSubCategories]);
 
   const addVariant = () => {
     setFormData(prev => ({
@@ -80,7 +71,7 @@ const EditProductModal = ({ isOpen, onClose }) => {
       toast.success("Product updated successfully");
       onClose();
     } catch (error) {
-      toast.error("Error: " + error.response?.data?.message || "Unknown error");
+      toast.error("Error: " + error.response?.data?.message );
       console.error(error);
     } finally {
       setIsUploading(false);
@@ -176,7 +167,7 @@ const EditProductModal = ({ isOpen, onClose }) => {
         {/* Subcategory */}
         <div className="flex gap-7 items-center">
           <label className="block text-md text-gray-800 font-semibold">Subcategory: </label>
-          {listSubcategories.length > 0 ? (
+          {subCategories.length > 0 ? (
             <select
               className="mt-1 w-full p-2 border border-gray-600 rounded-xl"
               value={formData.subcategory}
@@ -186,7 +177,7 @@ const EditProductModal = ({ isOpen, onClose }) => {
               <option disabled value="">
                 Select subcategory
               </option>
-              {listSubcategories.map((s) => (
+              {subCategories.map((s) => (
                 <option key={s._id} value={s._id}>
                   {s.name}
                 </option>

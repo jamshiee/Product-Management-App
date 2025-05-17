@@ -17,10 +17,6 @@ const ProductCard = ({ name, price, product, handleProductClick }) => {
                 src={product.images[0]}
                 alt={name}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = 'https://via.placeholder.com/128?text=No+Image';
-                }}
               />
             ) : (
               <span className="text-gray-500">No Image</span>

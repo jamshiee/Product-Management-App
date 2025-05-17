@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import subCategoryRoutes from './routes/subCategoryRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import wishListRoutes from './routes/wishListRoutes.js';
 
 
 
@@ -30,6 +31,7 @@ app.use('/auth', authRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/subcategories', subCategoryRoutes);
 app.use('/products', productRoutes);
+app.use('/wishlist',wishListRoutes)
 
 
 app.listen(PORT,()=>{

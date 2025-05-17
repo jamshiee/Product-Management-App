@@ -3,17 +3,18 @@ import Category from "../models/categorySchema.js";
 export const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
+    const userId = req.user._id;
 
     if (!name || !name.trim()) {
       return res.status(400).json({ message: "Category name is required" });
     }
 
-    const existing = await Category.findOne({ name: name.trim() });
+    const existing = await Category.findOne({ name: name.trim() , userId});
     if (existing) {
       return res.status(400).json({ message: "Category already exists" });
     }
 
-    const category = new Category({ name: name.trim() });
+    const category = new Category({ name: name.trim() , userId });
     await category.save();
 
     res.status(201).json({ message: "Category created", category });
@@ -39,7 +40,8 @@ export const getCategory = async (req, res) => {
 
 export const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const userId = req.user._id;
+    const categories = await Category.find({userId});
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: "Error fetching categories", error });

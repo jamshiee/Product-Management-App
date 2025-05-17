@@ -1,35 +1,27 @@
 import React, { useEffect } from "react";
 import Modal from "./Modal";
-import api from "../lib/axios";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import useProductStore from "../store/useProductStore";
 
 const AddSubCategoryModal = ({ isOpen, onClose }) => {
   const [subCategory, setSubCategory] = useState("");
-  const [getCategory, setGetCategory] = useState([]);
   const [categoryId, setCategoryId] = useState("");
-
-  const getAllCategories = async () => {
-    const res = await api.get("/categories/getall");
-    setGetCategory(res.data);
-  };
+  
+  const { categories, getAllCategories, createSubCategory } = useProductStore();
 
   useEffect(() => {
     getAllCategories();
-  }, []);
+  }, [getAllCategories]);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
     try {
-        const res = await api.post("/subcategories/create", { name: subCategory,categoryId:categoryId });
-        toast.success("Subcategory created successfully");
+        await createSubCategory(subCategory, categoryId);
         setSubCategory("");
         setCategoryId("");
         onClose();
-        console.log(res);
       } catch (error) {
-          toast.error("Error creating Subcategory: " + error.response?.data?.message || "Unknown error");
-          console.log(error);
+        console.log(error);
       }
   };
 
@@ -42,15 +34,15 @@ const AddSubCategoryModal = ({ isOpen, onClose }) => {
               <label className="block text-sm font-medium text-gray-700">
                 Category
               </label>
-                {getCategory.length > 0 ? (
+                {categories.length > 0 ? (
                 <select
                 className="mt-1 block w-full p-2 border rounded-md"
                 onChange={(e) => setCategoryId(e.target.value)}
                 required
               >
                 <option disabled selected hidden value="">Select Category</option>
-                {getCategory.map((item) => (
-                  <option value={item._id}>{item.name}</option>
+                {categories.map((item) => (
+                  <option key={item._id} value={item._id}>{item.name}</option>
                 ))}
               </select>
               ) : (

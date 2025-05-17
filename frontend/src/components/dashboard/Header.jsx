@@ -1,9 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import WishlistDrawer from "../WishlistDrawer";
+import api from "../../lib/axios";
+import useProductStore from "../../store/useProductStore";
 
 const Header = () => {
 
+  const { setSearchQuery } = useProductStore();
+
+  const [wishListData,setWishListData] = useState([])
   const [openWishlist, setOpenWishlist] = useState(false);
+
+  const getWishListItems = async() => {
+    try {
+      const res = await api.get('/wishlist/getall')
+      setWishListData(res.data.wishlist)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+    getWishListItems();
+  },[wishListData])
 
   return (
     <div>
@@ -12,6 +30,7 @@ const Header = () => {
           <input
             type="text"
             placeholder="Search any things"
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w- p-2 rounded-l-xl placeholder:ps-2 placeholder:text-sm text-black bg-white outline-none"
           />
           <button className="bg-yellow-500 text-sm font-medium text-white p-2 rounded-r-xl hover:bg-yellow-600">
@@ -58,7 +77,7 @@ const Header = () => {
           </button>
         </div>
       </header>
-      <WishlistDrawer isOpen={openWishlist} onClose={() => setOpenWishlist(false)} />
+      <WishlistDrawer wishListData={wishListData} isOpen={openWishlist} onClose={() => setOpenWishlist(false)} />
     </div>
   );
 };

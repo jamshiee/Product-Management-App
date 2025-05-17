@@ -6,6 +6,7 @@ import axios from "axios";
 import useStore from "../../store/useStore";
 import { useNavigate } from "react-router-dom";
 import api from "../../lib/axios";
+import { toast, ToastContainer } from "react-toastify";
 
 
 const signInSchema = z.object({
@@ -34,10 +35,11 @@ const Signin = () => {
       setUser(JSON.stringify(res.data.user));
       setToken(res.data.token);
 
-      alert("Sign-in successful");
       console.log("Sign-in successful:", res.data);
+      toast.success("Sign-in successful");
       navigate("/dashboard");
     } catch (error) {
+      toast.error("Sign-in failed: " + error.response.data.message);
       console.error("Sign-in error:", error);
     }
   };
@@ -106,7 +108,7 @@ const Signin = () => {
 
               <button
                 type="submit"
-                className="w-full bg-yellow-400 text-white py-3 rounded-full mt-6 hover:bg-yellow-300 disabled:opacity-50"
+                className="w-full bg-yellow-400 cursor-pointer text-white py-3 rounded-full mt-6 hover:bg-yellow-300 disabled:opacity-50"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Signing In..." : "SIGN IN"}
@@ -125,12 +127,13 @@ const Signin = () => {
             <p className="text-lg mb-6">
               Enter your personal details and start your journey with us
             </p>
-            <button className="border-2 border-white text-white px-6 py-2 rounded-full hover:bg-white hover:text-blue-900 transition">
+            <button onClick={() => navigate("/signup")} className="border-2 cursor-pointer border-white text-white px-6 py-2 rounded-full hover:bg-white hover:text-blue-900 transition">
               SIGN UP
             </button>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

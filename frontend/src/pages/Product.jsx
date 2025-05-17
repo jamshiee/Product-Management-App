@@ -3,23 +3,32 @@ import Header from "../components/dashboard/Header";
 import useProductStore from "../store/useProductStore";
 import { useNavigate } from "react-router-dom";
 import EditProductModal from "../components/EditProductModal";
+import api from "../lib/axios";
+import { toast, ToastContainer } from "react-toastify";
 
 const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const { productDetails } = useProductStore();
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+  const { isWished, setIsWished } = useProductStore();
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (productDetails && productDetails.variants && productDetails.variants.length > 0) {
+    if (
+      productDetails &&
+      productDetails.variants &&
+      productDetails.variants.length > 0
+    ) {
       setSelectedVariant(productDetails.variants[0]);
     }
   }, [productDetails]);
 
   useEffect(() => {
     if (!productDetails) {
-      navigate('/');
+      navigate("/");
     }
   }, [productDetails, navigate]);
 
@@ -33,6 +42,23 @@ const Product = () => {
       </div>
     );
   }
+
+  const setWishList = async () => {
+    try {
+      const response = await api.post(`/wishlist/toggle`, {
+        productId: productDetails._id,
+      });
+      if (response.data.status == "added") {
+        return setIsWished(true);
+      } else {
+        return setIsWished(false);
+      }
+      console.log(response.data);
+    } catch (error) {
+      toast.error(`${response.data.message}: ` + error);
+      console.log(error);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -156,9 +182,14 @@ const Product = () => {
               <button className="bg-yellow-400 hover:bg-yellow-300 text-white cursor-pointer font-medium px-6 py-3 rounded-2xl">
                 Buy it now
               </button>
-              <button className="rounded-full p-1">
+              <button
+                className="rounded-full p-1"
+                onClick={() => setWishList()}
+              >
                 <svg
-                  className="w-11 h-11 p-2 rounded-full bg-gray-300 cursor-pointer hover:bg-red-400 hover:text-white text-black"
+                  className={`w-11 h-11 p-2 rounded-full cursor-pointer ${
+                    isWished ? "bg-red-400" : "bg-gray-300"
+                  } hover:bg-red-200 text-white`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -175,7 +206,9 @@ const Product = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
 
+      {/* Edit Product Modal */}
       <EditProductModal
         isOpen={isProductModalOpen}
         onClose={() => {
